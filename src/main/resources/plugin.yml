@@ -1,0 +1,18 @@
+name: CustomDeathMessages
+version: '${project.version}'
+main: krisapps.customdeathmessages.CustomDeathMessages
+api-version: 1.15
+authors: [ _TheTechGuy_ ]
+description: A simple plugin allowing you to add more death messages to be broadcasted on the server.
+
+commands:
+  addhandle:
+    description: "Adds a handle for player death."
+    usage: "/addhandle <trigger> <param> <action_type> <command | message_to_broadcast>"
+  removehandle:
+    description: "Removes a handle for player death."
+    usage: "/removehandle <handlePath>"
+  viewhandle:
+    description: "Shows basic info about the specified handle."
+    usage: "/viewhandle <handlePath>"
+

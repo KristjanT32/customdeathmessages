@@ -11,10 +11,11 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Locale;
 
+@SuppressWarnings("ALL")
 public class AddHandle implements CommandExecutor {
 
-    CustomDeathMessages main;
-    HandleManager hc;
+    final CustomDeathMessages main;
+    final HandleManager hc;
 
     public AddHandle(CustomDeathMessages main){
         this.main = main;
@@ -25,7 +26,7 @@ public class AddHandle implements CommandExecutor {
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         //Syntax: /addhandle <trigger> [item] <action_type> <command | message_to_broadcast>
         ItemStack item;
-        int level = 0;
+        int level;
         StringBuilder value = new StringBuilder();
 
         if (sender instanceof Player) {

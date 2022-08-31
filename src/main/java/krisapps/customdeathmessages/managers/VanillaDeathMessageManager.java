@@ -167,7 +167,7 @@ public class VanillaDeathMessageManager {
 
     public String handlePlayerDeath(String playerUUID, PlayerDeathEvent deathEvent){
         String deathMessage = "";
-        Player player = Bukkit.getServer().getPlayer("_TheTechGuy_");
+        Player player = Bukkit.getServer().getPlayer(playerUUID);
         String originalDeathMessage = deathEvent.getDeathMessage();
         String killer = "";
         if (deathEvent.getEntity().getKiller() != null) {

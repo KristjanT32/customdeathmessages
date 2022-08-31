@@ -1,5 +1,10 @@
-package krisapps.customdeathmessages;
+package krisapps.customdeathmessages.managers;
 
+import krisapps.customdeathmessages.CustomDeathMessages;
+import krisapps.customdeathmessages.HandleAction;
+import krisapps.customdeathmessages.HandleTrigger;
+import krisapps.customdeathmessages.logging.Logger;
+import krisapps.customdeathmessages.logging.LoggingLevel;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -17,9 +22,12 @@ public class HandleManager {
     CustomDeathMessages main;
     FileConfiguration dataFile;
 
+    Logger log;
+
     public HandleManager(CustomDeathMessages main){
         this.main = main;
         dataFile = main.data;
+        log = new Logger(main);
     }
 
     String param = "";
@@ -42,10 +50,13 @@ public class HandleManager {
                 sender.sendMessage(ChatColor.YELLOW + "============================================");
                 sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&a&lSuccessfully set the following handle&r&a: " + "\n&eOccur if  &a" + trigger.name() + " &b" + param + "\n&eThen do &a" + action.name() + "\n&eWith value: &a" + value));
                 sender.sendMessage(ChatColor.YELLOW + "============================================");
+                log.log("New handle added for " + trigger, LoggingLevel.INFO);
             } catch (IOException e) {
                 sender.sendMessage(ChatColor.YELLOW + "============================================");
                 sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&cFailed to add the following handle: \n&eTrigger: &a" + trigger.name() + "\n&eTrigger Parameter: &a" + trigger_parameter + "\n&eAction: &a" + action.name() + "\n&eAction Value: &a" + value));
                 sender.sendMessage(ChatColor.YELLOW + "============================================");
+                log.log("Failed to add handle for " + trigger, LoggingLevel.ERROR);
+                log.log(e.getMessage(), LoggingLevel.ERROR);
             }
     }
 
@@ -54,10 +65,13 @@ public class HandleManager {
         try {
             dataFile.save(main.dataFile);
             sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&aSuccessfully removed handle &e'&d" + "handles." + trigger + "." + handle + "&e'&a."));
+            log.log("Handle for " + trigger + " removed.", LoggingLevel.INFO);
         } catch (IOException e) {
             sender.sendMessage(ChatColor.YELLOW + "============================================");
             sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&cFailed to remove handle &e'&d" + "handles." + trigger + "." + handle + "&e'&a."));
             sender.sendMessage(ChatColor.YELLOW + "============================================");
+            log.log("Handle for " + trigger + " could not be removed [!]", LoggingLevel.ERROR);
+            log.log(e.getMessage(), LoggingLevel.ERROR);
             e.printStackTrace();
         }
     }

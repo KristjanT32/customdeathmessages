@@ -1,3 +1,11 @@
 #Configuration file for ${project.name} ${project.version}
 
-#General
+configuration:
+  general:
+    # Should the plugin intercept the vanilla death messages and use the messages from the included file?
+    interceptVanillaDeathMessages: true
+
+  logging:
+    # Should the plugin log it's lifetime into a separate log file?
+    log: true
+

@@ -1,5 +1,6 @@
 package krisapps.customdeathmessages;
 
+import krisapps.customdeathmessages.managers.HandleManager;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.Command;

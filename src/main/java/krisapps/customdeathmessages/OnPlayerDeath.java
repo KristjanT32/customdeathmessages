@@ -1,5 +1,9 @@
 package krisapps.customdeathmessages;
 
+import krisapps.customdeathmessages.logging.Logger;
+import krisapps.customdeathmessages.logging.LoggingLevel;
+import krisapps.customdeathmessages.managers.HandleManager;
+import krisapps.customdeathmessages.managers.VanillaDeathMessageManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -15,20 +19,35 @@ public class OnPlayerDeath implements Listener {
 
     CustomDeathMessages main;
     HandleManager hm;
+    VanillaDeathMessageManager vdhm;
+    Logger log;
+
     public OnPlayerDeath(CustomDeathMessages main){
         this.main = main;
         hm = new HandleManager(main);
+        vdhm = new VanillaDeathMessageManager(this.main);
+        log = new Logger(main);
     }
 
 
     @EventHandler
     public void OnPlayerDied(PlayerDeathEvent e){
-        Player p = e.getEntity();
+        if (!(e.getEntity() instanceof Player)){ return; }
+
+        Player p = e.getEntity().getPlayer();
+
+        log.log("Handling player death for " + p.getDisplayName(), LoggingLevel.INFO);
+        if (main.config.getBoolean("configuration.general.interceptVanillaDeathMessages")) {
+            log.log("Replacing vanilla death message [...]", LoggingLevel.INFO);
+            e.setDeathMessage(vdhm.handlePlayerDeath(p.getUniqueId().toString(), e));
+        }else{
+            log.log("VDM Interception disabled, skipping [-]", LoggingLevel.INFO);
+        }
 
         if (main.data.getConfigurationSection("handles") != null) {
-            main.getLogger().info("Apply handles.");
+            log.log("Applying handles [...]", LoggingLevel.INFO);
             for (String key : main.data.getConfigurationSection("handles").getKeys(false)) {
-                main.getLogger().info("Check conditions for: " + key);
+                log.log("Checking handling conditions for " + key + " [...]", LoggingLevel.INFO);
                 switch (HandleTrigger.valueOf(key)){
                     case ITEM_IN_HAND:
                         for (String _case: main.data.getConfigurationSection("handles." + HandleTrigger.valueOf(key)).getKeys(false)) {
@@ -167,6 +186,7 @@ public class OnPlayerDeath implements Listener {
                         }
                 }
             }
+            log.log("Handles successfully applied [/]", LoggingLevel.INFO);
         }
     }
 

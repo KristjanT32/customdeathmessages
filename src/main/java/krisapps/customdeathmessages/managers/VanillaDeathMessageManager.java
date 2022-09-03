@@ -1,6 +1,7 @@
 package krisapps.customdeathmessages.managers;
 
 import krisapps.customdeathmessages.CustomDeathMessages;
+import krisapps.customdeathmessages.exceptions.TargetPlayerNullException;
 import krisapps.customdeathmessages.logging.Logger;
 import krisapps.customdeathmessages.logging.LoggingLevel;
 import org.bukkit.Bukkit;
@@ -11,6 +12,7 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import javax.annotation.Nullable;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.UUID;
 
 public class VanillaDeathMessageManager {
 
@@ -161,22 +163,43 @@ public class VanillaDeathMessageManager {
 
 
 
+    public String handlePlayerDeath(UUID playerUUID, PlayerDeathEvent deathEvent) throws TargetPlayerNullException {
 
+        main.refreshDataFiles();
 
-
-
-    public String handlePlayerDeath(String playerUUID, PlayerDeathEvent deathEvent){
         String deathMessage = "";
-        Player player = Bukkit.getServer().getPlayer(playerUUID);
+        Player player = null;
+        try {
+            player = Bukkit.getServer().getPlayer(playerUUID);
+            log.log("Successfully aquired event player [...]", LoggingLevel.INFO);
+        }catch (NullPointerException e){
+            log.log("Error aquiring event player.", LoggingLevel.ERROR);
+            log.log(e.getMessage(), LoggingLevel.FATAL);
+            throw new TargetPlayerNullException("Death handler for % received a null player.", playerUUID, e);
+        }
         String originalDeathMessage = deathEvent.getDeathMessage();
         String killer = "";
         if (deathEvent.getEntity().getKiller() != null) {
-            killer = deathEvent.getEntity().getKiller().getDisplayName();
+            try {
+                killer = deathEvent.getEntity().getKiller().getDisplayName();
+            }catch (NullPointerException e){
+                killer = deathEvent.getEntity().getKiller().getName();
+            }
         }else{
-            killer = "#NOKILLER#";
+            killer = deathEvent.getEntity().getLastDamageCause().getEntityType().toString();
         }
 
-        main.getLogger().info("Handling player death for " + player.getDisplayName());
+        try {
+            main.getLogger().info("Handling player death for " + player.getDisplayName() + " [...]");
+        }catch (NullPointerException e){
+            try {
+                main.getLogger().info("Handling player death for " + player.getName());
+                log.log("Error aquiring event player.", LoggingLevel.ERROR);
+                log.log(e.getMessage(), LoggingLevel.FATAL);
+            }catch (NullPointerException npe2){
+                main.getLogger().info("Handling player death for " + player.getPlayerListName());
+            }
+        }
 
         // death.fell
 
@@ -458,12 +481,12 @@ public class VanillaDeathMessageManager {
 
 
         if (originalDeathMessage.contains(killedby_player)){
-            deathMessage = formatMessagePVP(getMessageFromFile("death.attack_player"), player.getDisplayName(), killer);
+            deathMessage = formatMessagePVP(getMessageFromFile("death.attack.player"), player.getDisplayName(), killer);
             return deathMessage;
         }
 
         if (originalDeathMessage.contains(killedby_player_item1) && originalDeathMessage.contains(killedby_player_item2)){
-            deathMessage = formatMessagePVPItem(getMessageFromFile("death.attack_player_item"), player.getDisplayName(), killer, getKillerWeapon(deathEvent));
+            deathMessage = formatMessagePVPItem(getMessageFromFile("death.attack.player_item"), player.getDisplayName(), killer, getKillerWeapon(deathEvent));
             return deathMessage;
         }
 

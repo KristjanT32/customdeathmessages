@@ -1,5 +1,6 @@
 package krisapps.customdeathmessages;
 
+import krisapps.customdeathmessages.exceptions.TargetPlayerNullException;
 import krisapps.customdeathmessages.logging.Logger;
 import krisapps.customdeathmessages.logging.LoggingLevel;
 import krisapps.customdeathmessages.managers.HandleManager;
@@ -33,15 +34,21 @@ public class OnPlayerDeath implements Listener {
     @EventHandler
     public void OnPlayerDied(PlayerDeathEvent e){
         if (!(e.getEntity() instanceof Player)){ return; }
-
         Player p = e.getEntity().getPlayer();
 
         log.log("Handling player death for " + p.getDisplayName(), LoggingLevel.INFO);
         if (main.config.getBoolean("configuration.general.interceptVanillaDeathMessages")) {
             log.log("Replacing vanilla death message [...]", LoggingLevel.INFO);
-            e.setDeathMessage(vdhm.handlePlayerDeath(p.getUniqueId().toString(), e));
+            String message = "";
+            try {
+                message = vdhm.handlePlayerDeath(p.getUniqueId(), e);
+            }catch (TargetPlayerNullException exception){
+                log.log("Error caught: player null", LoggingLevel.INFO);
+            }
+            log.log("Vanilla message replaced. Result: " + message, LoggingLevel.INFO);
+            e.setDeathMessage(message);
         }else{
-            log.log("VDM Interception disabled, skipping [-]", LoggingLevel.INFO);
+            log.log("VDM Interception disabled, skipping [-]", LoggingLevel.WARNING);
         }
 
         if (main.data.getConfigurationSection("handles") != null) {

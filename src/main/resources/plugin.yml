@@ -15,4 +15,7 @@ commands:
   viewhandle:
     description: "Shows basic info about the specified handle."
     usage: "/viewhandle <handlePath>"
+  refpf:
+    description: "Refreshes plugin's files (data, config and dm)"
+    usage: "/refpf"
 

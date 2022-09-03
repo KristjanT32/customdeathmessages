@@ -104,6 +104,7 @@ public class CustomDeathMessages extends JavaPlugin {
         getCommand("addhandle").setExecutor(new AddHandle(this));
         getCommand("removehandle").setExecutor(new RemoveHandle(this));
         getCommand("viewhandle").setExecutor(new ViewHandle(this));
+        getCommand("refpf").setExecutor(new RefreshPluginFiles(this));
 
 
         //Tab Completion
@@ -120,5 +121,21 @@ public class CustomDeathMessages extends JavaPlugin {
     public void onDisable() {
         getLogger().info("Plugin disabled!");
         instance = null;
+    }
+
+    public boolean refreshDataFiles() {
+        log.log("Refreshing plugin data file content [...]", LoggingLevel.WARNING);
+        try {
+            data.load(dataFile);
+            config.load(configFile);
+            deathMessages.load(deathMessagesFile);
+            log.log("All files have been refreshed successfully [+]", LoggingLevel.INFO);
+            return true;
+        }catch (IOException | InvalidConfigurationException e){
+            log.log("An error was encountered while refreshing the files [!]", LoggingLevel.FATAL);
+            log.log(e.getMessage(), LoggingLevel.FATAL);
+            e.printStackTrace();
+            return false;
+        }
     }
 }

@@ -45,6 +45,7 @@ public class OnPlayerDeath implements Listener {
             }catch (TargetPlayerNullException exception){
                 log.log("Error caught: player null", LoggingLevel.INFO);
             }
+            log.log("Original message: " + e.getDeathMessage(), LoggingLevel.INFO);
             log.log("Vanilla message replaced. Result: " + message, LoggingLevel.INFO);
             e.setDeathMessage(message);
         }else{

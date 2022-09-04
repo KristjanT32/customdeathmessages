@@ -5,8 +5,11 @@ import krisapps.customdeathmessages.exceptions.TargetPlayerNullException;
 import krisapps.customdeathmessages.logging.Logger;
 import krisapps.customdeathmessages.logging.LoggingLevel;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 
 import javax.annotation.Nullable;
@@ -32,7 +35,7 @@ public class VanillaDeathMessageManager {
     String accident_otherclimbable = "fell while climbing";
     String accident_generic = "fell from a high place";
 
-    String killer = "was doomed to fall";
+    String killed_fall = "was doomed to fall";
     String assisted_death = "was doomed to fall by";
     String assisted_death_with_item_1 = "was doomed to fall by";
     String assisted_death_with_item_2 = "by";
@@ -104,12 +107,7 @@ public class VanillaDeathMessageManager {
 
     String fallingStalactite = "was skewered by a falling stalactite";
     String fallingStalactite_pvp = "was skewered by a falling stalactite whilst fighting";
-
-    String killedby_mob = "was slain by";
-    String killedby_mob_item1 = "was slain by";
-    String killedby_mob_item2 = "using";
     String killedby_player = "was slain by";
-    String killedby_player_item1 = "was slain by";
     String killedby_player_item2 = "using";
 
     String arrow = "was shot by";
@@ -167,8 +165,8 @@ public class VanillaDeathMessageManager {
 
         main.refreshDataFiles();
 
-        String deathMessage = "";
-        Player player = null;
+        String deathMessage;
+        Player player;
         try {
             player = Bukkit.getServer().getPlayer(playerUUID);
             log.log("Successfully aquired event player [...]", LoggingLevel.INFO);
@@ -185,8 +183,6 @@ public class VanillaDeathMessageManager {
             }catch (NullPointerException e){
                 killer = deathEvent.getEntity().getKiller().getName();
             }
-        }else{
-            killer = deathEvent.getEntity().getLastDamageCause().getEntityType().toString();
         }
 
         try {
@@ -238,12 +234,12 @@ public class VanillaDeathMessageManager {
                 return deathMessage;
             }
 
-            if (originalDeathMessage.contains(killer)) {
+            if (originalDeathMessage.contains(killed_fall)) {
                 deathMessage = formatMessageNaturalCauses(getMessageFromFile("death.fell.killer"), player.getDisplayName());
                 return deathMessage;
             }
 
-            if (originalDeathMessage.contains(assisted_death)) {
+            if (originalDeathMessage.contains(assisted_death) && !originalDeathMessage.contains(assisted_death_with_item_2)) {
                 deathMessage = formatMessagePVP(getMessageFromFile("death.fell.assist"), player.getDisplayName(), killer);
                 return deathMessage;
             }
@@ -253,7 +249,7 @@ public class VanillaDeathMessageManager {
                 return deathMessage;
             }
 
-            if (originalDeathMessage.contains(finish)) {
+            if (originalDeathMessage.contains(finish) && !originalDeathMessage.contains(finish_item_2)) {
                 deathMessage = formatMessagePVP(getMessageFromFile("death.fell.finish"), player.getDisplayName(), killer);
                 return deathMessage;
             }
@@ -390,7 +386,7 @@ public class VanillaDeathMessageManager {
             return deathMessage;
         }
 
-        if (originalDeathMessage.contains(assisted_explosion)){
+        if (originalDeathMessage.contains(assisted_explosion) && !originalDeathMessage.contains(assisted_item_explosion_2)){
             deathMessage = formatMessagePVP(getMessageFromFile("death.attack.explosion_player"), player.getDisplayName(), killer);
             return deathMessage;
         }
@@ -467,30 +463,21 @@ public class VanillaDeathMessageManager {
 
         if (originalDeathMessage.contains(fallingStalactite_pvp)){
             deathMessage = formatMessagePVP(getMessageFromFile("death.attack.fallingStalactite_player"), player.getDisplayName(), killer);
-        }
-
-        if (originalDeathMessage.contains(killedby_mob)){
-            deathMessage = formatMessagePVP(getMessageFromFile("death.attack.mob"), player.getDisplayName(), killer);
-            return deathMessage;
-        }
-
-        if (originalDeathMessage.contains(killedby_mob_item1) && originalDeathMessage.contains(killedby_mob_item2)){
-            deathMessage = formatMessagePVPItem(getMessageFromFile("death.attack.mob_item"), player.getDisplayName(), killer, getKillerWeapon(deathEvent));
             return deathMessage;
         }
 
 
-        if (originalDeathMessage.contains(killedby_player)){
+        if (originalDeathMessage.contains(killedby_player) && !originalDeathMessage.contains(killedby_player_item2)){
             deathMessage = formatMessagePVP(getMessageFromFile("death.attack.player"), player.getDisplayName(), killer);
             return deathMessage;
         }
 
-        if (originalDeathMessage.contains(killedby_player_item1) && originalDeathMessage.contains(killedby_player_item2)){
+        if (originalDeathMessage.contains(killedby_player) && originalDeathMessage.contains(killedby_player_item2)){
             deathMessage = formatMessagePVPItem(getMessageFromFile("death.attack.player_item"), player.getDisplayName(), killer, getKillerWeapon(deathEvent));
             return deathMessage;
         }
 
-        if (originalDeathMessage.contains(arrow)){
+        if (originalDeathMessage.contains(arrow) && !originalDeathMessage.contains(arrow_item)){
             deathMessage = formatMessagePVP(getMessageFromFile("death.attack.arrow"), player.getDisplayName(), killer);
             return deathMessage;
         }
@@ -500,7 +487,7 @@ public class VanillaDeathMessageManager {
             return deathMessage;
         }
 
-        if (originalDeathMessage.contains(fireball)){
+        if (originalDeathMessage.contains(fireball) && !originalDeathMessage.contains(fireball_item)){
             deathMessage = formatMessageNaturalCauses(getMessageFromFile("death.attack.fireball"), player.getDisplayName());
             return deathMessage;
         }
@@ -520,7 +507,7 @@ public class VanillaDeathMessageManager {
             return deathMessage;
         }
 
-        if (originalDeathMessage.contains(indirectMagic)){
+        if (originalDeathMessage.contains(indirectMagic) && !originalDeathMessage.contains(indirectMagic_item)){
             deathMessage = formatMessagePVP(getMessageFromFile("death.attack.indirectMagic"), player.getDisplayName(), killer);
             return deathMessage;
         }
@@ -530,7 +517,7 @@ public class VanillaDeathMessageManager {
             return deathMessage;
         }
 
-        if (originalDeathMessage.contains(thorns)){
+        if (originalDeathMessage.contains(thorns) && !originalDeathMessage.contains(thorns_item)){
             deathMessage = formatMessagePVP(getMessageFromFile("death.attack.thorns"), player.getDisplayName(), killer);
             return deathMessage;
         }
@@ -540,7 +527,7 @@ public class VanillaDeathMessageManager {
             return deathMessage;
         }
 
-        if (originalDeathMessage.contains(trident)){
+        if (originalDeathMessage.contains(trident) && !originalDeathMessage.contains(trident_item_using)){
             deathMessage = formatMessagePVP(getMessageFromFile("death.attack.trident"), player.getDisplayName(), killer);
             return deathMessage;
         }
@@ -646,7 +633,7 @@ public class VanillaDeathMessageManager {
             return deathMessage;
         }
         log.log("Failed to recognize event death message [!]", LoggingLevel.ERROR);
-        return " died apparently?";
+        return "Player died apparently?";
     }
 
     String capitalize(String input){
@@ -654,6 +641,7 @@ public class VanillaDeathMessageManager {
     }
 
     String getKillerWeapon(PlayerDeathEvent deathEvent){
+        log.log("Test Log", LoggingLevel.INFO);
         if (deathEvent.getEntity().getKiller().getItemInUse().getItemMeta().getDisplayName() != null){
             return deathEvent.getEntity().getKiller().getItemInUse().getItemMeta().getDisplayName();
         }else{
@@ -676,6 +664,8 @@ public class VanillaDeathMessageManager {
                 weaponType = String.valueOf(words[0].charAt(0)).toUpperCase(Locale.ROOT) + words[0].substring(1);
                 return weaponType;
             }
+
+            log.log("Killer Weapon recognized as: " + weaponType, LoggingLevel.INFO);
 
             return weaponType;
         }

@@ -63,7 +63,7 @@ public class VanillaDeathMessageManager {
     String wall_suff_assisted = "suffocated in a wall whilst fighting";
 
     String squished = "was squished too much";
-    String squished_assisted = "was squashed by";
+    String squished_assisted = "was squished by";
 
     String drown = "drowned";
     String drown_assisted = "drowned whilst trying to escape";

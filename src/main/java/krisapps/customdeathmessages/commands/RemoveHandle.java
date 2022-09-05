@@ -20,7 +20,7 @@ public class RemoveHandle implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         //Syntax: /removehandle <handlePath>
-        if (args.length == 1) {
+        if (args.length == 2) {
             hm.removeHandle(args[0], args[1], sender);
         }
         return true;

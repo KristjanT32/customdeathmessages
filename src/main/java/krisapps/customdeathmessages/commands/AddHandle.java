@@ -1,5 +1,8 @@
-package krisapps.customdeathmessages;
+package krisapps.customdeathmessages.commands;
 
+import krisapps.customdeathmessages.CustomDeathMessages;
+import krisapps.customdeathmessages.enums.HandleAction;
+import krisapps.customdeathmessages.enums.HandleTrigger;
 import krisapps.customdeathmessages.managers.HandleManager;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;

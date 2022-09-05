@@ -1,4 +1,11 @@
 package krisapps.customdeathmessages;
+import krisapps.customdeathmessages.commands.AddHandle;
+import krisapps.customdeathmessages.commands.RefreshPluginFiles;
+import krisapps.customdeathmessages.commands.RemoveHandle;
+import krisapps.customdeathmessages.commands.ViewHandle;
+import krisapps.customdeathmessages.commands.tabcompletion.AddHandleTab;
+import krisapps.customdeathmessages.commands.tabcompletion.ViewHandleTab;
+import krisapps.customdeathmessages.handlers.OnPlayerDeath;
 import krisapps.customdeathmessages.logging.Logger;
 import krisapps.customdeathmessages.logging.LoggingLevel;
 import org.bukkit.Bukkit;
@@ -7,7 +14,6 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import javax.swing.text.View;
 import java.io.File;
 import java.io.IOException;
 

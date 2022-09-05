@@ -1,5 +1,6 @@
-package krisapps.customdeathmessages;
+package krisapps.customdeathmessages.commands.tabcompletion;
 
+import krisapps.customdeathmessages.CustomDeathMessages;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;

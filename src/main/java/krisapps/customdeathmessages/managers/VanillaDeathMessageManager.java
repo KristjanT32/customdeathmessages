@@ -169,9 +169,9 @@ public class VanillaDeathMessageManager {
         Player player;
         try {
             player = Bukkit.getServer().getPlayer(playerUUID);
-            log.log("Successfully aquired event player [...]", LoggingLevel.INFO);
+            log.log("[DeathMessageHandler]: Successfully acquired event player " + player.getName(), LoggingLevel.INFO);
         }catch (NullPointerException e){
-            log.log("Error aquiring event player.", LoggingLevel.ERROR);
+            log.log("[DeathMessageHandler]: Could not acquire event player.", LoggingLevel.ERROR);
             log.log(e.getMessage(), LoggingLevel.FATAL);
             throw new TargetPlayerNullException("Death handler for % received a null player.", playerUUID, e);
         }
@@ -182,18 +182,6 @@ public class VanillaDeathMessageManager {
                 killer = deathEvent.getEntity().getKiller().getDisplayName();
             }catch (NullPointerException e){
                 killer = deathEvent.getEntity().getKiller().getName();
-            }
-        }
-
-        try {
-            main.getLogger().info("Handling player death for " + player.getDisplayName() + " [...]");
-        }catch (NullPointerException e){
-            try {
-                main.getLogger().info("Handling player death for " + player.getName());
-                log.log("Error aquiring event player.", LoggingLevel.ERROR);
-                log.log(e.getMessage(), LoggingLevel.FATAL);
-            }catch (NullPointerException npe2){
-                main.getLogger().info("Handling player death for " + player.getPlayerListName());
             }
         }
 

@@ -1,5 +1,6 @@
-package krisapps.customdeathmessages;
+package krisapps.customdeathmessages.commands;
 
+import krisapps.customdeathmessages.CustomDeathMessages;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;

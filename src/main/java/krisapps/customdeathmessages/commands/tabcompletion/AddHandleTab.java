@@ -1,4 +1,6 @@
-package krisapps.customdeathmessages;
+package krisapps.customdeathmessages.commands.tabcompletion;
+import krisapps.customdeathmessages.enums.HandleAction;
+import krisapps.customdeathmessages.enums.HandleTrigger;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;

@@ -1,21 +1,16 @@
 package krisapps.customdeathmessages.managers;
 
 import krisapps.customdeathmessages.CustomDeathMessages;
-import krisapps.customdeathmessages.HandleAction;
-import krisapps.customdeathmessages.HandleTrigger;
+import krisapps.customdeathmessages.enums.HandleAction;
+import krisapps.customdeathmessages.enums.HandleTrigger;
 import krisapps.customdeathmessages.logging.Logger;
 import krisapps.customdeathmessages.logging.LoggingLevel;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemStack;
 
 import java.io.IOException;
-import java.util.Optional;
 
 public class HandleManager {
 

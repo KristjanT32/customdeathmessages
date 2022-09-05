@@ -1,4 +1,4 @@
-package krisapps.customdeathmessages;
+package krisapps.customdeathmessages.enums;
 
 public enum HandleTrigger {
     ITEM_IN_HAND,

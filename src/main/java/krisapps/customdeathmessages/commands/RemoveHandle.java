@@ -1,5 +1,6 @@
-package krisapps.customdeathmessages;
+package krisapps.customdeathmessages.commands;
 
+import krisapps.customdeathmessages.CustomDeathMessages;
 import krisapps.customdeathmessages.managers.HandleManager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -19,7 +20,9 @@ public class RemoveHandle implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         //Syntax: /removehandle <handlePath>
+        if (args.length == 1) {
             hm.removeHandle(args[0], args[1], sender);
+        }
         return true;
     }
 }

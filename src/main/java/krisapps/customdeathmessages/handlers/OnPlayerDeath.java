@@ -1,5 +1,8 @@
-package krisapps.customdeathmessages;
+package krisapps.customdeathmessages.handlers;
 
+import krisapps.customdeathmessages.CustomDeathMessages;
+import krisapps.customdeathmessages.enums.HandleAction;
+import krisapps.customdeathmessages.enums.HandleTrigger;
 import krisapps.customdeathmessages.exceptions.TargetPlayerNullException;
 import krisapps.customdeathmessages.logging.Logger;
 import krisapps.customdeathmessages.logging.LoggingLevel;
@@ -8,7 +11,6 @@ import krisapps.customdeathmessages.managers.VanillaDeathMessageManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.entity.Mob;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -34,27 +36,25 @@ public class OnPlayerDeath implements Listener {
 
     @EventHandler
     public void OnPlayerDied(PlayerDeathEvent e){
-        if (!(e.getEntity() instanceof Player)){ return; }
         Player p = e.getEntity().getPlayer();
 
-        log.log("Handling player death for " + p.getDisplayName(), LoggingLevel.INFO);
+        log.log("Start death handler for " + p.getDisplayName(), LoggingLevel.INFO);
         if (main.config.getBoolean("configuration.general.interceptVanillaDeathMessages")) {
-            log.log("Replacing vanilla death message [...]", LoggingLevel.INFO);
+            log.log("[VanillaDeathMessageManager]: Interception enabled, proceeding...", LoggingLevel.INFO);
             String message = "";
             try {
                 message = vdhm.handlePlayerDeath(p.getUniqueId(), e);
             }catch (TargetPlayerNullException exception){
                 log.log("Error caught: player null", LoggingLevel.INFO);
             }
-            log.log("Original message: " + e.getDeathMessage(), LoggingLevel.INFO);
-            log.log("Vanilla message replaced. Result: " + message, LoggingLevel.INFO);
+            log.log("[VanillaDeathMessageManager]: Replacing original message: " + e.getDeathMessage() + "\nwith:" + message, LoggingLevel.INFO);
             e.setDeathMessage(message);
         }else{
-            log.log("VDM Interception disabled, skipping [-]", LoggingLevel.WARNING);
+            log.log("[VanillaDeathMessageManager]: Interception disabled, skipping...", LoggingLevel.WARNING);
         }
 
         if (main.data.getConfigurationSection("handles") != null) {
-            log.log("Applying handles [...]", LoggingLevel.INFO);
+            log.log("Applying handlers [...]", LoggingLevel.INFO);
             for (String key : main.data.getConfigurationSection("handles").getKeys(false)) {
                 log.log("Checking handling conditions for " + key + " [...]", LoggingLevel.INFO);
                 switch (HandleTrigger.valueOf(key)){
